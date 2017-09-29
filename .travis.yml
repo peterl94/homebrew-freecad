@@ -1,0 +1,32 @@
+env:
+  global:
+  - FREECAD_RELEASE="0.17"
+  - FREECAD_BREW_RELEASE="FreeCAD 0.17 brews"
+  - OSX_PORTS_CACHE=${OSX_PORTS_CACHE:-FreeCAD/FreeCAD-ports-cache}
+
+os: osx
+
+language: cpp
+
+osx_image: xcode7.3
+
+before_install:
+  - brew update >/dev/null && brew install jq
+  - brew tap FreeCAD/freecad
+  - eval "$(curl -fsSL "https://raw.githubusercontent.com/${OSX_PORTS_CACHE}/v${FREECAD_RELEASE}/travis-helpers.sh")"
+  - cacheContext=$(create_helper_context repo=${TRAVIS_REPO_SLUG} auth_token=${GH_TOKEN} release="${FREECAD_BREW_RELEASE}")
+
+install:
+  - brew install --verbose --build-bottle shiboken && brew bottle shiboken
+  - brew install --verbose --build-bottle pyside && brew bottle pyside
+  - brew install --verbose --build-bottle pyside-tools && brew bottle pyside-tools
+script:
+  - |
+    if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      bottle=$(ls shiboken*.tar.gz)
+      gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
+      bottle=$(ls pyside-2*.tar.gz)
+      gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
+      bottle=$(ls pyside-tools*.tar.gz)
+      gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
+    fi
