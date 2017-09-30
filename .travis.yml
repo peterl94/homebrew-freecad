@@ -17,16 +17,16 @@ before_install:
   - cacheContext=$(create_helper_context repo=${TRAVIS_REPO_SLUG} auth_token=${GH_TOKEN} release="${FREECAD_BREW_RELEASE}")
 
 install:
-  - brew install --verbose --build-bottle shiboken && brew bottle shiboken
-  #- brew install --verbose --build-bottle pyside && brew bottle pyside
-  #- brew install --verbose --build-bottle pyside-tools && brew bottle pyside-tools
+  #- brew install --verbose --build-bottle shiboken && brew bottle shiboken
+  - brew install --verbose --build-bottle pyside && brew bottle pyside
+  - brew install --verbose --build-bottle pyside-tools && brew bottle pyside-tools
 script:
   - |
     if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      bottle=$(ls shiboken*.tar.gz)
+      #bottle=$(ls shiboken*.tar.gz)
+      #gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
+      bottle=$(ls pyside-2*.tar.gz)
       gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
-      #bottle=$(ls pyside-2*.tar.gz)
-      #gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
-      #bottle=$(ls pyside-tools*.tar.gz)
-      #gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
+      bottle=$(ls pyside-tools*.tar.gz)
+      gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
     fi
