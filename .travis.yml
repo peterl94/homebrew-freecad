@@ -18,15 +18,21 @@ before_install:
 
 install:
   #- brew install --verbose --build-bottle shiboken && brew bottle shiboken
-  - brew install --verbose --build-bottle pyside && brew bottle pyside
-  - brew install --verbose --build-bottle pyside-tools && brew bottle pyside-tools
+  #- brew install --verbose --build-bottle pyside && brew bottle pyside
+  #- brew install --verbose --build-bottle pyside-tools && brew bottle pyside-tools
+  - brew install --verbose --build-bottle coin && brew bottle coin
+  - brew install --verbose --build-bottle pivy && brew bottle pivy
 script:
   - |
     if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
       #bottle=$(ls shiboken*.tar.gz)
       #gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
-      bottle=$(ls pyside-2*.tar.gz)
+      #bottle=$(ls pyside-2*.tar.gz)
+      #gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
+      #bottle=$(ls pyside-tools*.tar.gz)
+      #gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
+      bottle=$(ls coin*.tar.gz)
       gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
-      bottle=$(ls pyside-tools*.tar.gz)
+      bottle=$(ls pivy*.tar.gz)
       gitHub_deploy_asset_to_release_named $cacheContext $bottle "${FREECAD_BREW_RELEASE}" replace
     fi
